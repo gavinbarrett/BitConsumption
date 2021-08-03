@@ -1,6 +1,6 @@
 import { Pool } from 'pg';
 
-const pool = new Pool({
+const pool: Pool = new Pool({
 	user: 'postgres',
 	host: 'localhost',
 	database: "bitconsume",
@@ -8,10 +8,10 @@ const pool = new Pool({
 	port: 5432
 });
 
-export const query = (text) => {
+export const query = (text: string) => {
 	return pool.query(text);
 }
 
-export const queryVal = (text, values) => {
+export const queryVal = (text: string, values: Array<number|Date>) => {
     return pool.query(text, values);
 }
