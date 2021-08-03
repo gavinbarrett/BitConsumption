@@ -1,7 +1,6 @@
-import * as superagent from 'superagent';
-import * as db from './database';
 import { QueryResult } from 'pg';
-import { Response } from 'superagent';
+import { get, Response } from 'superagent';
+import * as db from './database';
 
 const url: string = 'https://cbeci.org/api/v1.1.0/download/data?price=0.05';
 
@@ -12,7 +11,7 @@ const addToDB = async (data) => {
 	for (let i in data) await db.queryVal(query, [data[i][0], data[i][1], data[i][2], data[i][3], data[i][4]]);
 }
 
-export const checkDataSync = async () => {
+const checkDataSync = async () => {
 	// make sure database exists
 	await db.query('create table if not exists energy_usage (time integer, datetime timestamptz, min real, max real, guess real)');
 	// get current date
@@ -32,7 +31,7 @@ const getTargetDate = () => {
 const refreshDataStore = async () => {
 	// synchronize the database with the CBECI data
 	try {
-		const resp: Response = await superagent.get(url);
+		const resp: Response = await get(url);
 		const data: Array<string> = resp.text.split("\r\n");
 		// pull data from the database to find the most recent data point
 		const recent: QueryResult = await db.query('select time from energy_usage order by time desc');
@@ -51,4 +50,11 @@ const refreshDataStore = async () => {
 	} catch (err) {
 		console.log(`Error`);
 	}
+}
+
+export const setupDataSyncHandler = async () => {
+    // sync the database
+    checkDataSync();
+    // set timeout to sync the data every day
+    setTimeout(() => setupDataSyncHandler(), 86400000);
 }
