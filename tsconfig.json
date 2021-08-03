@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+	"noImplicitAny": false,
+	"moduleResolution": "node",
+	"sourceMap": true,
+	"target": "es6",
+	"module": "commonjs",
+	"esModuleInterop": false,
+	"removeComments": true,
+	"allowSyntheticDefaultImports": true,
+	"allowJs": true,
+	"baseUrl": "./",
+	},
+	"include": ["server", "controller.ts", "database.ts"]
+}
